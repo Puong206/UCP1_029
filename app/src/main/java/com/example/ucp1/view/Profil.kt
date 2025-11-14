@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -82,24 +83,27 @@ fun ProfilPage (
     Box(modifier = Modifier.fillMaxSize())
     {
         Scaffold(
-            contentColor = colorResource(R.color.orange),
+            containerColor = colorResource(R.color.orange),
             topBar = {
-                TopAppBar(
+                TopAppBar(colors = TopAppBarDefaults.topAppBarColors(colorResource(R.color.orange)),
                     title = {
                         Row(
-                            horizontalArrangement = Arrangement.End
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(painter = painterResource(R.drawable.profil_kereta),
                                 null,
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
-                                    .size(28.dp)
+                                    .size(48.dp)
                                     .clip(CircleShape)
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
                             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start) {
                                 Text(
                                     "Arya Bagas Saputra",
-                                    fontSize = 20.sp,
+                                    fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White
                                 )
@@ -115,7 +119,7 @@ fun ProfilPage (
                 )
             },
             bottomBar = {
-                BottomAppBar {
+                BottomAppBar(containerColor = colorResource(R.color.orange)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -160,7 +164,9 @@ fun ProfilPage (
                 .fillMaxSize())
             {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         "Profil",
@@ -169,20 +175,23 @@ fun ProfilPage (
                         textAlign = TextAlign.Center
                     )
                 }
-                LazyColumn(modifier = Modifier.fillMaxSize(),
+                LazyColumn(modifier = Modifier
+                    .padding(start = 12.dp, top = 32.dp, end = 12.dp)
+                    .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally)
                 {
                     items(items) { item ->
                         ElevatedCard(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 8.dp, end = 8.dp),
+                            .padding(vertical = 8.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = colorResource(R.color.orange)
+                                containerColor = Color.White,
+                                contentColor = colorResource(R.color.orange)
                             ))
                         {
                             Row(
                                 modifier = Modifier
-                                    .padding(8.dp)
+                                    .padding(12.dp)
                                     .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             )
@@ -191,44 +200,37 @@ fun ProfilPage (
                                     Text(
                                         "Nama Matkul",
                                         fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
+                                        fontWeight = FontWeight.Bold
                                     )
                                     Text(
                                         item.matkul,
                                         fontSize = 16.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White
+                                        fontWeight = FontWeight.Normal
                                     )
                                 }
                                 Column {
                                     Text(
                                         "Angkatan",
                                         fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
+                                        fontWeight = FontWeight.Bold
                                     )
                                     Text(
                                         item.angkatan,
                                         fontSize = 16.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White
+                                        fontWeight = FontWeight.Normal
                                     )
                                 }
                             }
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Column {
+                            Column(modifier = Modifier.padding(12.dp)) {
                                 Text(
                                     "Kelas",
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    fontWeight = FontWeight.Bold
                                 )
                                 Text(
                                     item.kelas,
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.White
+                                    fontWeight = FontWeight.Normal
                                 )
                             }
                         }
