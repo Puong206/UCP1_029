@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -112,13 +113,15 @@ fun LoginPage(
     {
         Scaffold(
             containerColor = colorResource(R.color.orange),
+            contentColor = Color.White,
             topBar ={
-                TopAppBar(
+                TopAppBar(colors = TopAppBarDefaults.topAppBarColors(colorResource(R.color.orange)),
                     title = {
                         Text("Login",
                             color = Color.White,
                             fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold)
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 )
             },
