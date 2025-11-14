@@ -33,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -51,6 +52,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ucp1.R
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters
 import java.util.Date
 import java.util.Locale
 
@@ -81,7 +87,6 @@ fun FormPage(
     val matkul: List<String> = listOf("PAM", "PAW", "PWS")
     val angkatan: List<String> = listOf("2022", "2023", "2024")
     val jam: List<String> = listOf("08:50 - 11.30", "13.20 - 16.20")
-    val datePickerState = rememberDatePickerState()
     var expanded by remember { mutableStateOf(false) }
     var expanded2 by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
@@ -92,6 +97,26 @@ fun FormPage(
     val isJamEnabled = txtTgl.isNotEmpty()
     val isDosenEnabled = txtJam.isNotEmpty()
     val isMateriEnabled = txtDosen.isNotEmpty()
+
+    val zonaWaktu = ZoneId.of("Asia/Jakarta")
+    val (awalMinggu, akhirMinggu) = remember {
+        val today = LocalDate.now(zonaWaktu)
+        val start = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val end = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        Pair(start, end)
+    }
+    val zonaUTC = ZoneId.of("UTC")
+    val selectableDates = remember (awalMinggu, akhirMinggu) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                val tanggalTerpilih = Instant.ofEpochMilli(utcTimeMillis)
+                    .atZone(zonaUTC)
+                    .toLocalDate()
+                return !tanggalTerpilih.isBefore(awalMinggu) && !tanggalTerpilih.isAfter(akhirMinggu)
+            }
+        }
+    }
+    val datePickerState = rememberDatePickerState(selectableDates = selectableDates)
 
     if (showDatePicker) {
         DatePickerDialog(
