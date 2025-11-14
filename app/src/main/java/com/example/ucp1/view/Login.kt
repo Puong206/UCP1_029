@@ -57,6 +57,7 @@ fun LoginPage(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             containerColor = Color.White,
+            titleContentColor = colorResource(R.color.orange),
             icon = { Icon(Icons.Filled.Info,
                 null,
                 modifier = Modifier.size(64.dp),
