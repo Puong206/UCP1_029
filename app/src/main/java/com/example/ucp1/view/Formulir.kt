@@ -4,15 +4,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -66,16 +71,21 @@ fun FormPage(
     var txtDosen by remember { mutableStateOf("") }
     var txtMateri by remember { mutableStateOf("") }
 
-    val matkul: List<String> = listOf("PAM", "PAW", "PWS")
-    val angkatan: List<String> = listOf("2022", "2023", "2024")
+    var kuliah by remember { mutableStateOf("") }
+    var tahun by remember { mutableStateOf("") }
     var tgl by remember { mutableStateOf("") }
-    val jam: List<String> = listOf("08:50 - 11.30", "13.20 - 16.20")
+    var waktu by remember { mutableStateOf("") }
     var dosen by remember { mutableStateOf("") }
     var materi by remember { mutableStateOf("") }
+
+    val matkul: List<String> = listOf("PAM", "PAW", "PWS")
+    val angkatan: List<String> = listOf("2022", "2023", "2024")
+    val jam: List<String> = listOf("08:50 - 11.30", "13.20 - 16.20")
     val datePickerState = rememberDatePickerState()
     var expanded by remember { mutableStateOf(false) }
     var expanded2 by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     val isAngkatanEnabled = txtMatkul.isNotEmpty()
     val isTglEnabled = txtAngkatan.isNotEmpty()
@@ -106,6 +116,57 @@ fun FormPage(
         ) {
             DatePicker(state = datePickerState)
         }
+    }
+
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            containerColor = colorResource(R.color.white),
+            icon = {Icon(Icons.Filled.CheckCircle,
+                null,
+                modifier = Modifier
+                    .size(64.dp),
+                tint = colorResource(R.color.orange),)},
+            title = {
+                Column(modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "Berhasil", fontWeight = FontWeight.Bold, fontSize = 24.sp, color = colorResource(R.color.orange))
+                    Text(text = "Data berhasil disimpan",  fontWeight = FontWeight.Normal, fontSize = 16.sp, color = colorResource(R.color.orange))
+                }
+            },
+            text = {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Mata Kuliah", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Text(text = kuliah, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Angkatan", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Text(text = tahun, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Tanggal", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Text(text = tgl, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Jam", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Text(text = waktu, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Dosen", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Text(text = dosen, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Materi", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.orange))
+                    Text(text = materi, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = colorResource(R.color.orange))
+                }
+            },
+            confirmButton = {
+                Button(onClick = onHomeButtonClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.orange),
+                        contentColor = colorResource(R.color.white)
+                    )) {
+                    Text("Ok",  fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
+                }
+            }
+        )
     }
 
     Column(
@@ -246,7 +307,7 @@ fun FormPage(
                     )
                     TextField(
                         value = txtTgl,
-                        onValueChange = {},
+                        onValueChange = { txtTgl = it },
                         label = {Text("Pilih Tanggal")},
                         readOnly = true,
                         enabled = isTglEnabled,
@@ -331,8 +392,8 @@ fun FormPage(
         ) {
             OutlinedButton(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = colorResource(R.color.orange)
+                    containerColor = colorResource(R.color.lightorange),
+                    contentColor = Color.White
                 ),
                 onClick = onHomeButtonClick,
                 modifier = Modifier.width(160.dp),
@@ -348,11 +409,24 @@ fun FormPage(
                     containerColor = Color.White,
                     contentColor = colorResource(R.color.orange)
                 ),
-                onClick = onHomeButtonClick,
+                enabled = txtMatkul.isNotEmpty() &&
+                        txtAngkatan.isNotEmpty() &&
+                        txtTgl.isNotEmpty() &&
+                        txtJam.isNotEmpty() &&
+                        txtDosen.isNotEmpty(),
+                onClick = {
+                    kuliah = txtMatkul
+                    tahun = txtAngkatan
+                    tgl = txtTgl
+                    waktu = txtJam
+                    dosen = txtDosen
+                    materi = txtMateri
+                    showDialog = true
+                },
                 modifier = Modifier.width(160.dp),
             ) {
                 Text(
-                    "Presensi",
+                    "Tambah",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
