@@ -170,6 +170,7 @@ fun ProfilPage (
                 ) {
                     Text(
                         "Profil",
+                        color = Color.White,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
