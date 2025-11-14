@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
@@ -23,6 +26,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -73,6 +77,12 @@ fun FormPage(
     var expanded2 by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
 
+    val isAngkatanEnabled = txtMatkul.isNotEmpty()
+    val isTglEnabled = txtAngkatan.isNotEmpty()
+    val isJamEnabled = txtTgl.isNotEmpty()
+    val isDosenEnabled = txtJam.isNotEmpty()
+    val isMateriEnabled = txtDosen.isNotEmpty()
+
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
@@ -112,16 +122,15 @@ fun FormPage(
         )
         Card(
             modifier = Modifier
-                .padding(top = 12.dp, start = 24.dp, end = 24.dp, bottom = 80.dp)
+                .padding(top = 12.dp, start = 24.dp, end = 24.dp)
                 .align(Alignment.CenterHorizontally),
             colors = CardDefaults.cardColors(colorResource(R.color.white))
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(20.dp),
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
@@ -136,13 +145,13 @@ fun FormPage(
                     ) {
                         TextField(
                             value = txtMatkul,
-                            onValueChange = {},
+                            onValueChange = {txtMatkul = it},
                             readOnly = true,
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .menuAnchor(),
-                            label = { Text("Pilih Status") },
+                            label = { Text("Pilih Matkul") },
                             trailingIcon = {
                                 IconButton(onClick = {}) {
                                     Icon(Icons.Filled.KeyboardArrowDown,
@@ -180,11 +189,16 @@ fun FormPage(
                     )
                     ExposedDropdownMenuBox(
                         expanded = expanded2,
-                        onExpandedChange = { expanded2 = it },
+                        onExpandedChange = {
+                            if (isAngkatanEnabled) {
+                                expanded2 = it
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         TextField(
                             value = txtAngkatan,
+                            enabled = isAngkatanEnabled,
                             onValueChange = {},
                             readOnly = true,
                             shape = RoundedCornerShape(12.dp),
@@ -193,10 +207,13 @@ fun FormPage(
                                 .menuAnchor(),
                             label = { Text("Pilih Angkatan") },
                             trailingIcon = {
-                                IconButton(onClick = {}) {
+                                IconButton(onClick = {
+                                    if (isAngkatanEnabled) expanded2 = !expanded2
+                                }, enabled = isAngkatanEnabled
+                                    ) {
                                     Icon(Icons.Filled.KeyboardArrowDown,
                                         null,
-                                        tint = colorResource(R.color.orange)
+                                        tint = colorResource(R.color.orange),
                                     )
                                 }
                             },
@@ -232,9 +249,10 @@ fun FormPage(
                         onValueChange = {},
                         label = {Text("Pilih Tanggal")},
                         readOnly = true,
+                        enabled = isTglEnabled,
                         shape = RoundedCornerShape(12.dp),
                         trailingIcon = {
-                            IconButton(onClick = {showDatePicker = true}) {
+                            IconButton(onClick = {if (isTglEnabled) showDatePicker = true}) {
                                 Icon(
                                     Icons.Filled.DateRange, contentDescription = "Pilih Tanggal"
                                 )}
@@ -259,6 +277,7 @@ fun FormPage(
                             ) {
                                 RadioButton(
                                     selected = txtJam == item,
+                                    enabled = isJamEnabled,
                                     onClick = { txtJam = item }
                                 )
                                 Text(
@@ -277,14 +296,66 @@ fun FormPage(
                         fontWeight = FontWeight.SemiBold
                     )
                     TextField(
-                        value = txtMatkul,
-                        onValueChange = {},
-                        readOnly = false,
+                        value = txtDosen,
+                        enabled = isDosenEnabled,
+                        singleLine = true,
+                        onValueChange = { txtDosen = it},
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                     )
                 }
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Materi",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    TextField(
+                        value = txtMateri,
+                        enabled = isMateriEnabled,
+                        onValueChange = { txtMateri = it},
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+            }
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedButton(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = colorResource(R.color.orange)
+                ),
+                onClick = onHomeButtonClick,
+                modifier = Modifier.width(160.dp),
+            ) {
+                Text(
+                    "Kembali",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = colorResource(R.color.orange)
+                ),
+                onClick = onHomeButtonClick,
+                modifier = Modifier.width(160.dp),
+            ) {
+                Text(
+                    "Presensi",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
