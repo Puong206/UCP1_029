@@ -84,6 +84,9 @@ fun FormPage(
     var dosen by remember { mutableStateOf("") }
     var materi by remember { mutableStateOf("") }
 
+    var dosenError by remember { mutableStateOf(false) }
+    var materiError by remember { mutableStateOf(false) }
+
     val matkul: List<String> = listOf("PAM", "PAW", "PWS")
     val angkatan: List<String> = listOf("2022", "2023", "2024")
     val jam: List<String> = listOf("08:50 - 11.30", "13.20 - 16.20")
@@ -384,11 +387,22 @@ fun FormPage(
                         value = txtDosen,
                         enabled = isDosenEnabled,
                         singleLine = true,
-                        onValueChange = { txtDosen = it},
+                        onValueChange = {
+                            txtDosen = it
+                            dosenError = false
+                        },
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        isError = dosenError
                     )
+                    if (dosenError) {
+                        Text(
+                            "Tidak boleh diisi angka",
+                            color = Color.Red,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
@@ -399,11 +413,22 @@ fun FormPage(
                     TextField(
                         value = txtMateri,
                         enabled = isMateriEnabled,
-                        onValueChange = { txtMateri = it},
+                        onValueChange = {
+                            txtMateri = it
+                            materiError = false
+                        },
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        isError = materiError
                     )
+                    if (materiError) {
+                        Text(
+                            "Tidak boleh diisi angka",
+                            color = Color.Red,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             }
         }
@@ -439,13 +464,21 @@ fun FormPage(
                         txtJam.isNotEmpty() &&
                         txtDosen.isNotEmpty(),
                 onClick = {
-                    kuliah = txtMatkul
-                    tahun = txtAngkatan
-                    tgl = txtTgl
-                    waktu = txtJam
-                    dosen = txtDosen
-                    materi = txtMateri
-                    showDialog = true
+                    val dosenNumeric = txtDosen.isNotEmpty() && txtDosen.all { it.isDigit() }
+                    val materiNumeric = txtMateri.isNotEmpty() && txtMateri.all { it.isDigit() }
+
+                    dosenError = dosenNumeric
+                    materiError = materiNumeric
+
+                    if (!dosenNumeric && !materiNumeric) {
+                        kuliah = txtMatkul
+                        tahun = txtAngkatan
+                        tgl = txtTgl
+                        waktu = txtJam
+                        dosen = txtDosen
+                        materi = txtMateri
+                        showDialog = true
+                    }
                 },
                 modifier = Modifier.width(160.dp),
             ) {
