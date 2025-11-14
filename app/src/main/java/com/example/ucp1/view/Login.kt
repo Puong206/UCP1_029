@@ -118,11 +118,14 @@ fun LoginPage(
             topBar ={
                 TopAppBar(colors = TopAppBarDefaults.topAppBarColors(colorResource(R.color.orange)),
                     title = {
-                        Text("Login",
-                            color = Color.White,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Column(modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("Login",
+                                color = Color.White,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
                     }
                 )
             },
