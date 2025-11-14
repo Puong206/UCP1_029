@@ -191,8 +191,8 @@ fun LoginPage(
                 Button(
                     enabled = checked,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.orange),
-                        contentColor = Color.White
+                        containerColor = Color.White,
+                        contentColor = colorResource(R.color.orange)
                     ),
                     onClick = onStartButtonClick,
                     modifier = Modifier.width(240.dp)

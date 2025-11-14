@@ -126,7 +126,7 @@ fun ProfilPage (
                                 containerColor = Color.White,
                                 contentColor = colorResource(R.color.orange)
                             ),
-                            onClick = {onLogoutButtonClick},
+                            onClick = onLogoutButtonClick,
                             modifier = Modifier.width(160.dp),
                         ) {
                             Text(
@@ -137,10 +137,10 @@ fun ProfilPage (
                         }
                         Button(
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = colorResource(R.color.orange),
-                                contentColor = Color.White
+                                containerColor = Color.White,
+                                contentColor = colorResource(R.color.orange)
                             ),
-                            onClick = {onFormButtonClick},
+                            onClick = onFormButtonClick,
                             modifier = Modifier.width(160.dp),
                         ) {
                             Text(
