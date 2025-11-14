@@ -48,8 +48,6 @@ fun LoginPage(
     var txtUser by remember { mutableStateOf("") }
     var txtPw by remember { mutableStateOf("") }
 
-    var user by remember { mutableStateOf("") }
-    var pw by remember { mutableStateOf("") }
     var checked by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
