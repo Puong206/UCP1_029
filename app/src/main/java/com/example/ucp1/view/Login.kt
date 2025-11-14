@@ -194,7 +194,7 @@ fun LoginPage(
                         containerColor = colorResource(R.color.orange),
                         contentColor = Color.White
                     ),
-                    onClick = {onStartButtonClick},
+                    onClick = onStartButtonClick,
                     modifier = Modifier.width(240.dp)
                 ) {
                     Text(
