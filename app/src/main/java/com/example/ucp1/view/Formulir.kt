@@ -3,15 +3,19 @@ package com.example.ucp1.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -19,8 +23,11 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +41,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ucp1.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+private fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return formatter.format(Date(millis))
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,11 +57,46 @@ fun FormPage(
 ) {
     var txtMatkul by remember { mutableStateOf("") }
     var txtAngkatan by remember { mutableStateOf("") }
+    var txtTgl by remember { mutableStateOf("") }
+    var txtJam by remember { mutableStateOf("") }
+    var txtDosen by remember { mutableStateOf("") }
+    var txtMateri by remember { mutableStateOf("") }
 
     val matkul: List<String> = listOf("PAM", "PAW", "PWS")
     val angkatan: List<String> = listOf("2022", "2023", "2024")
+    var tgl by remember { mutableStateOf("") }
+    val jam: List<String> = listOf("08:50 - 11.30", "13.20 - 16.20")
+    var dosen by remember { mutableStateOf("") }
+    var materi by remember { mutableStateOf("") }
+    val datePickerState = rememberDatePickerState()
     var expanded by remember { mutableStateOf(false) }
     var expanded2 by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                        datePickerState.selectedDateMillis?.let {
+                            txtTgl = convertMillisToDate(it)
+                        }
+                    }
+                ) {
+                    Text("Pilih")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Batal")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -57,11 +107,11 @@ fun FormPage(
         Text(
             text = "Formulir Tambah Presensi",
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
         Card(
             modifier = Modifier
-                //.fillMaxSize()
                 .padding(top = 12.dp, start = 24.dp, end = 24.dp, bottom = 80.dp)
                 .align(Alignment.CenterHorizontally),
             colors = CardDefaults.cardColors(colorResource(R.color.white))
@@ -170,7 +220,70 @@ fun FormPage(
                             }
                         }
                     }
-
+                }
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Tanggal",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    TextField(
+                        value = txtTgl,
+                        onValueChange = {},
+                        label = {Text("Pilih Tanggal")},
+                        readOnly = true,
+                        shape = RoundedCornerShape(12.dp),
+                        trailingIcon = {
+                            IconButton(onClick = {showDatePicker = true}) {
+                                Icon(
+                                    Icons.Filled.DateRange, contentDescription = "Pilih Tanggal"
+                                )}
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Jam",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Column {
+                        jam.forEach { item ->
+                            Row(modifier = Modifier
+                                .selectable(
+                                    selected = txtJam == item,
+                                    onClick = { txtJam = item}
+                                ),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = txtJam == item,
+                                    onClick = { txtJam = item }
+                                )
+                                Text(
+                                    text = item,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            }
+                        }
+                    }
+                }
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Dosen",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    TextField(
+                        value = txtMatkul,
+                        onValueChange = {},
+                        readOnly = false,
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
                 }
             }
         }
