@@ -269,7 +269,7 @@ fun FormPage(
                             label = { Text("Pilih Angkatan") },
                             trailingIcon = {
                                 IconButton(onClick = {
-                                    if (isAngkatanEnabled) expanded2 = !expanded2
+                                    if (isAngkatanEnabled) {}
                                 }, enabled = isAngkatanEnabled
                                     ) {
                                     Icon(Icons.Filled.KeyboardArrowDown,
@@ -332,14 +332,13 @@ fun FormPage(
                             Row(modifier = Modifier
                                 .selectable(
                                     selected = txtJam == item,
-                                    onClick = { txtJam = item}
+                                    onClick = { if (isJamEnabled) txtJam = item }
                                 ),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 RadioButton(
                                     selected = txtJam == item,
-                                    enabled = isJamEnabled,
-                                    onClick = { txtJam = item }
+                                    onClick = { if (isJamEnabled) txtJam = item }
                                 )
                                 Text(
                                     text = item,
