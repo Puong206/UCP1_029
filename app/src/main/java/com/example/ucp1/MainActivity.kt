@@ -11,6 +11,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.ucp1.ui.theme.UCP1Theme
 import com.example.ucp1.view.FormPage
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             UCP1Theme {
                 Surface(
+                    color = colorResource(R.color.orange),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     //LoginPage {}
